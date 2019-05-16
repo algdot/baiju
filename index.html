@@ -63,6 +63,64 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-task3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/16/task3/" class="article-date">
+  <time datetime="2019-05-16T12:32:44.395Z" itemprop="datePublished">2019-05-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="task3"><a href="#task3" class="headerlink" title="task3"></a>task3</h1><h2 id="TF-IDF概述"><a href="#TF-IDF概述" class="headerlink" title="TF-IDF概述"></a>TF-IDF概述</h2><p>TF-IDF是Term Frequency -  Inverse Document Frequency的缩写，即“词频-逆文本频率”。它由两部分组成，TF和IDF。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">def tf(word, count):</span><br><span class="line">    return count[word] / sum(count.values())</span><br><span class="line">def n_containing(word, count_list):</span><br><span class="line">    return sum(1 for count in count_list if word in count)</span><br><span class="line">def idf(word, count_list):</span><br><span class="line">    return math.log(len(count_list)) / (1 + n_containing(word, count_list))</span><br><span class="line">def tfidf(word, count, count_list):</span><br><span class="line">    return tf(word, count) * idf(word, count_list)</span><br><span class="line"></span><br><span class="line">def get_tokens(text):</span><br><span class="line">    lower = text.lower()</span><br><span class="line">    remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)</span><br><span class="line">    no_punctuation = lower.translate(remove_punctuation_map)</span><br><span class="line">    tokens = nltk.word_tokenize(no_punctuation)</span><br><span class="line"></span><br><span class="line">    return tokens</span><br><span class="line"></span><br><span class="line">def count_term(text):</span><br><span class="line">    tokens = get_tokens(text)</span><br><span class="line">    filtered = [w for w in tokens if not w in stopwords.words(&apos;english&apos;)]</span><br><span class="line">    stemmer = PorterStemmer()</span><br><span class="line">    stemmed = stem_tokens(filtered, stemmer)</span><br><span class="line">    count = Counter(stemmed)</span><br><span class="line">    return count</span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    text1 = &quot;Natural language processing (NLP) is a field of computer science, artificial intelligence and computational linguistics concerned with the interactions between computers and human (natural) languages, and, in particular, concerned with programming computers to fruitfully process large natural language corpora. Challenges in natural language processing frequently involve natural language understanding, natural language generation (frequently from formal, machine-readable logical forms), connecting language and machine perception, managing human-computer dialog systems, or some combination thereof.&quot;</span><br><span class="line"></span><br><span class="line">    text2 = &quot;The Georgetown experiment in 1954 involved fully automatic translation of more than sixty Russian sentences into English. The authors claimed that within three or five years, machine translation would be a solved problem.[2] However, real progress was much slower, and after the ALPAC report in 1966, which found that ten-year-long research had failed to fulfill the expectations, funding for machine translation was dramatically reduced. Little further research in machine translation was conducted until the late 1980s, when the first statistical machine translation systems were developed.&quot;</span><br><span class="line"></span><br><span class="line">    text3 = &quot;During the 1970s, many programmers began to write conceptual ontologies, which structured real-world information into computer-understandable data. Examples are MARGIE (Schank, 1975), SAM (Cullingford, 1978), PAM (Wilensky, 1978), TaleSpin (Meehan, 1976), QUALM (Lehnert, 1977), Politics (Carbonell, 1979), and Plot Units (Lehnert 1981). During this time, many chatterbots were written including PARRY, Racter, and Jabberwacky。&quot;</span><br><span class="line"></span><br><span class="line">    texts = [text1, text2, text3]</span><br><span class="line">    countlist = []</span><br><span class="line">    for text in texts:</span><br><span class="line">        countlist.append(count_term(text))</span><br><span class="line">    for i, count in enumerate(countlist):</span><br><span class="line">        print(&quot;Top words in document &#123;&#125;&quot;.format(i + 1))</span><br><span class="line">        scores = &#123;word: tfidf(word, count, countlist) for word in count&#125;</span><br><span class="line">        sorted_words = sorted(scores.items(), key = lambda x: x[1], reverse=True)</span><br><span class="line">        for word, score in sorted_words[:5]:</span><br><span class="line">            print(&quot;\tWord: &#123;&#125;, TF-IDF: &#123;&#125;&quot;.format(word, round(score, 5)))</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/26766008" target="_blank" rel="noopener">TF-IDF的算法Python实现和简单示例</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjvqolyp80002uyfy6kwlqzti" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-task2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/16/task2/" class="article-date">
+  <time datetime="2019-05-16T12:32:30.328Z" itemprop="datePublished">2019-05-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Task2"><a href="#Task2" class="headerlink" title="Task2"></a>Task2</h1><h2 id="jieba分词"><a href="#jieba分词" class="headerlink" title="jieba分词"></a>jieba分词</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"># coding=utf-8</span><br><span class="line"># -*- coding: cp936 -*-</span><br><span class="line">import jieba</span><br><span class="line">import jieba.analyse</span><br><span class="line"></span><br><span class="line">f = open(&apos;it168.txt&apos;,&apos;r&apos;,encoding=&apos;utf-8&apos;)</span><br><span class="line">text = f.read()</span><br><span class="line">f.close()</span><br><span class="line"></span><br><span class="line"># 分词</span><br><span class="line">seg_list = jieba.cut(text, cut_all=True)</span><br><span class="line">print(&quot;Full Mode: &quot; + &quot;/ &quot;.join(seg_list))  # 全模式</span><br><span class="line"></span><br><span class="line">seg_list = jieba.cut(text, cut_all=False)</span><br><span class="line">print(&quot;Default Mode: &quot; + &quot;/ &quot;.join(seg_list))  # 精确模式</span><br><span class="line"></span><br><span class="line">seg_list = jieba.cut_for_search(text)  # 搜索引擎模式</span><br><span class="line">print(&quot;, &quot;.join(seg_list))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 关键字提取</span><br><span class="line"># 基于TF-IDF算法的关键词抽取</span><br><span class="line"># sentence 为待提取的文本</span><br><span class="line"># topK 为返回几个 TF/IDF 权重最大的关键词，默认值为 20</span><br><span class="line"># withWeight 为是否一并返回关键词权重值，默认值为 False</span><br><span class="line"># allowPOS 仅包括指定词性的词，默认值为空，即不筛选</span><br><span class="line">keywords = jieba.analyse.extract_tags(sentence=text, topK=20, withWeight=True, allowPOS=(&apos;n&apos;,&apos;nr&apos;,&apos;ns&apos;))</span><br><span class="line"># 基于TextRank算法的关键词抽取</span><br><span class="line"># keywords = jieba.analyse.textrank(text, topK=20, withWeight=True, allowPOS=(&apos;n&apos;,&apos;nr&apos;,&apos;ns&apos;))</span><br><span class="line">for item in keywords:</span><br><span class="line">    print(item[0],item[1])</span><br><span class="line"># 词语标注</span><br><span class="line">import jieba.posseg</span><br><span class="line"># 新建自定义分词器，tokenizer 参数可指定内部使用的 jieba.Tokenizer 分词器。jieba.posseg.dt 为默认词性标注分词器。</span><br><span class="line">posseg = jieba.posseg.POSTokenizer(tokenizer=None)</span><br><span class="line">words = posseg.cut(text)</span><br><span class="line">for word, flag in words:</span><br><span class="line">    print(&apos;%s %s&apos; % (word, flag))</span><br><span class="line"></span><br><span class="line"># 对原有的语料库添加词语</span><br><span class="line">jieba.add_word(word, freq=None, tag=None)</span><br><span class="line"># 导入语料文件</span><br><span class="line">jieba.load_userdict(&apos;disney.txt&apos;)</span><br><span class="line">(END)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjvqolyp90003uyfyxmh68kdm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-task1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/05/12/task1/" class="article-date">
@@ -135,7 +193,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjvkzi2mw0002kk1q8k7dq90m" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjvqolyp50001uyfy6pymfz38" class="article-share-link">Share</a>
       
       
     </footer>
@@ -204,7 +262,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjvkzi2mi0000kk1qkagwxyx3" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjvqolypa0004uyfyqxns4u9h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -249,7 +307,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjvkzi2ms0001kk1qqvphm85b" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjvqolyoy0000uyfy6s35gp2v" class="article-share-link">Share</a>
       
       
     </footer>
@@ -288,6 +346,14 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2019/05/16/task3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/16/task2/">(no title)</a>
+          </li>
         
           <li>
             <a href="/2019/05/12/task1/">(no title)</a>
