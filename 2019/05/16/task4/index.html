@@ -7,15 +7,18 @@
   
   <title>task4 | 白驹</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="java nlp">
+  <meta name="description" content="Task4词袋模型（BOW，bag of words）Jane wants to go to Shenzhen. Bob  wants to go to Shanghai. 将所有词语装进一个袋子里，不考虑其词法和语序的问题，即每个词语都是独立的。例如上面2个例句，就可以构成一个词袋，袋子里包括Jane、wants、to、go、Shenzhen、Bob、Shanghai。假设建立一个数组（或词典）">
+<meta name="keywords" content="java nlp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="task4">
 <meta property="og:url" content="https://day6.github.io/2019/05/16/task4/index.html">
 <meta property="og:site_name" content="白驹">
+<meta property="og:description" content="Task4词袋模型（BOW，bag of words）Jane wants to go to Shenzhen. Bob  wants to go to Shanghai. 将所有词语装进一个袋子里，不考虑其词法和语序的问题，即每个词语都是独立的。例如上面2个例句，就可以构成一个词袋，袋子里包括Jane、wants、to、go、Shenzhen、Bob、Shanghai。假设建立一个数组（或词典）">
 <meta property="og:locale" content="zh">
-<meta property="og:updated_time" content="2019-05-16T13:56:31.633Z">
+<meta property="og:updated_time" content="2019-05-18T13:42:55.410Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="task4">
+<meta name="twitter:description" content="Task4词袋模型（BOW，bag of words）Jane wants to go to Shenzhen. Bob  wants to go to Shanghai. 将所有词语装进一个袋子里，不考虑其词法和语序的问题，即每个词语都是独立的。例如上面2个例句，就可以构成一个词袋，袋子里包括Jane、wants、to、go、Shenzhen、Bob、Shanghai。假设建立一个数组（或词典）">
   
     <link rel="alternate" href="/baiju/atom.xml" title="白驹" type="application/atom+xml">
   
@@ -84,11 +87,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="Task4"><a href="#Task4" class="headerlink" title="Task4"></a>Task4</h1><h2 id="词袋模型（BOW，bag-of-words）"><a href="#词袋模型（BOW，bag-of-words）" class="headerlink" title="词袋模型（BOW，bag of words）"></a>词袋模型（BOW，bag of words）</h2><p>Jane wants to go to Shenzhen.</p>
+<p>Bob  wants to go to Shanghai.</p>
+<pre><code>将所有词语装进一个袋子里，不考虑其词法和语序的问题，即每个词语都是独立的。例如上面2个例句，就可以构成一个词袋，袋子里包括Jane、wants、to、go、Shenzhen、Bob、Shanghai。假设建立一个数组（或词典）用于映射匹配
+</code></pre><p>[Jane, wants, to, go, Shenzhen, Bob, Shanghai]</p>
+<pre><code>那么上面两个例句就可以用以下两个向量表示，对应的下标与映射数组的下标相匹配，其值为该词语出现的次数
+</code></pre><p>[1,1,2,1,1,0,0]<br>[0,1,2,1,0,1,1]</p>
+<pre><code>这两个词频向量就是词袋模型，可以很明显的看到语序关系已经完全丢失。
+</code></pre><h2 id="词向量模型"><a href="#词向量模型" class="headerlink" title="词向量模型"></a>词向量模型</h2><pre><code>词向量模型是考虑词语位置关系的一种模型。通过大量语料的训练，将每一个词语映射到高维度（几千、几万维以上）的向量当中，通过求余弦的方式，可以判断两个词语之间的关系，例如例句中的Jane和Bob在词向量模型中，他们的余弦值可能就接近1，因为这两个都是人名，Shenzhen和Bob的余弦值可能就接近0，因为一个是人名一个是地名。
+现在常用word2vec构成词向量模型，它的底层采用基于CBOW和Skip-Gram算法的神经网络模型。
+</code></pre><h2 id="Skip-gram-和-CBOW-模型"><a href="#Skip-gram-和-CBOW-模型" class="headerlink" title="Skip-gram 和 CBOW 模型"></a>Skip-gram 和 CBOW 模型</h2><ul>
+<li>如果是用一个词语作为输入，来预测它周围的上下文，那这个模型叫做『Skip-gram 模型』</li>
+<li>而如果是拿一个词语的上下文作为输入，来预测这个词语本身，则是 『CBOW 模型』</li>
+</ul>
+<h2 id="word2vec1"><a href="#word2vec1" class="headerlink" title="word2vec1"></a>word2vec1</h2><h3 id="gensim"><a href="#gensim" class="headerlink" title="gensim"></a>gensim</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from gensim.models import word2vec</span><br><span class="line">sentences = word2vec.LineSentence(&apos;./in_the_name_of_people_segment.txt&apos;)</span><br><span class="line">model = word2vec.Word2Vec(sentences, hs=1,min_count=1,window=3,size=100)</span><br><span class="line">model.wv.similar_by_word(&apos;沙瑞金&apos;.decode(&apos;utf-8&apos;), topn =100)</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://blog.csdn.net/sinat_36521655/article/details/79993369" target="_blank" rel="noopener">词袋模型（BOW，bag of words）和词向量模型（Word Embedding）概念介绍</a></li>
+<li><a href="https://www.cnblogs.com/pinard/p/7160330.html" target="_blank" rel="noopener">word2vec原理(一) CBOW与Skip-Gram模型基础</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/26306795" target="_blank" rel="noopener">秒懂词向量Word2vec的本质</a></li>
+<li><a href="https://github.com/tensorflow/tensorflow/blob/r1.10/tensorflow/examples/tutorials/word2vec/word2vec_basic.py" target="_blank" rel="noopener">tensorflow word2vec example</a></li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjvqq78jl0004phfypocf9tc9" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjvtkaqx70004s7fy3didjmh1" class="article-share-link">Share</a>
       
       
     </footer>
