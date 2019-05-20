@@ -63,6 +63,59 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-task5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/baiju/2019/05/19/task5/" class="article-date">
+  <time datetime="2019-05-19T14:45:08.000Z" itemprop="datePublished">2019-05-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/baiju/2019/05/19/task5/">task5</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="贝叶斯"><a href="#贝叶斯" class="headerlink" title="贝叶斯"></a>贝叶斯</h2><p>  朴素贝叶斯的原理：</p>
+<p>  基于朴素贝叶斯公式，比较出后验概率的最大值来进行分类，后验概率的计算是由先验概率与类条件概率的乘积得出，先验概率和类条件概率要通过训练数据集得出，即为朴素贝叶斯分类模型，将其保存为中间结果，测试文档进行分类时调用这个中间结果得出后验概率。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">def train(clf):</span><br><span class="line">    clf.fit(train_data, train_labels)  # 训练模型</span><br><span class="line">    predict_labels = clf.predict(test_data)</span><br><span class="line">    # 预测对了几个？</span><br><span class="line">    n = 0</span><br><span class="line">    for i in range(len(predict_labels)):</span><br><span class="line">        if predict_labels[i] == test_labels[i]:</span><br><span class="line">            n = n + 1</span><br><span class="line">    print(&quot;正确率: &#123;&#125;&quot;.format(n / len(predict_labels)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 高斯贝叶斯</span><br><span class="line">clf3 = GaussianNB()</span><br><span class="line">train(clf3)</span><br><span class="line"># 正确率: 0.50848</span><br><span class="line"></span><br><span class="line"># 多项式贝叶斯</span><br><span class="line">clf3 = MultinomialNB()</span><br><span class="line">train(clf3)</span><br><span class="line"># 正确率: 0.49972</span><br><span class="line"></span><br><span class="line"># 伯努利贝叶斯</span><br><span class="line">clf3 = BernoulliNB()</span><br><span class="line">train(clf3)</span><br><span class="line"># 正确率: 0.51236</span><br></pre></td></tr></table></figure>
+<h2 id="SVM模型"><a href="#SVM模型" class="headerlink" title="SVM模型"></a>SVM模型</h2><p>  支持向量机SVM是一系列监督学习算法，包括分类，回归，异常点检测。 </p>
+<p>  svm的优点：</p>
+<ul>
+<li>在高纬空间的有效性。</li>
+<li>在特征维度高于样本维度的情况下，依然有效。</li>
+<li>它的决策函数只使用训练数据的一部分，通常把这一部分数据称之为支持向量，所以它是比较节省内存的。</li>
+<li>可以提供各种各样的核函数来扩展SVM的功能。<br>SVM的缺点：</li>
+<li>如果特征的维度远大于样本的数目，那么性能将大大的降低。</li>
+<li>SVM不直接提供概率估计。</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://blog.csdn.net/AQ_cainiao_AQ/article/details/76178128" target="_blank" rel="noopener">Python scikit-learn 模块的SVM方法介绍 </a></li>
+<li><a href="https://www.cnblogs.com/pinard/p/6117515.html" target="_blank" rel="noopener">scikit-learn 支持向量机算法库使用小结</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjvweegei00043ifyspp1p1r4" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-task4" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/baiju/2019/05/16/task4/" class="article-date">
@@ -109,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjvtkijp500019xfyqfao9ewl" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjvweegek00053ifybia9bywl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -148,7 +201,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjvtkijpf00049xfygco1qt8a" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjvweegef00023ifyr7l0h20k" class="article-share-link">Share</a>
       
       
     </footer>
@@ -175,7 +228,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjvtkijp900029xfyfshb5n4y" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjvweegeg00033ifyflcn9xnz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -257,7 +310,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjvtkijpb00039xfyhzcwydaa" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjvweeged00013ifyk17ndcy2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -326,7 +379,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjvtkijph00059xfyv3mj9t7d" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjvweegel00063ifyg76ys4mq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -371,7 +424,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjvtkijoy00009xfyhe1eehzz" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjvweege600003ifyp3svdgnd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -412,6 +465,10 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       <ul>
         
           <li>
+            <a href="/baiju/2019/05/19/task5/">task5</a>
+          </li>
+        
+          <li>
             <a href="/baiju/2019/05/16/task4/">task4</a>
           </li>
         
@@ -425,10 +482,6 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
         
           <li>
             <a href="/baiju/2019/05/12/task1/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/baiju/2018/04/27/u/">消息队列</a>
           </li>
         
       </ul>
