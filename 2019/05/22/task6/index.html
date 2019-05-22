@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>task6 | 白驹</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="FastText 原理1、应用场景fastText是一种Facebook AI Research在16年开源的一个文本分类器。 其特点就是fast。相对于其它文本分类模型，如SVM，Logistic Regression和neural network等模型，fastText在保持分类效果的同时，大大缩短了训练时间。 2、优缺点适合大型数据+高效的训练速度：能够训练模型“在使用标准多核CPU的情况下">
+<meta name="keywords" content="java nlp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="task6">
+<meta property="og:url" content="https://day6.github.io/2019/05/22/task6/index.html">
+<meta property="og:site_name" content="白驹">
+<meta property="og:description" content="FastText 原理1、应用场景fastText是一种Facebook AI Research在16年开源的一个文本分类器。 其特点就是fast。相对于其它文本分类模型，如SVM，Logistic Regression和neural network等模型，fastText在保持分类效果的同时，大大缩短了训练时间。 2、优缺点适合大型数据+高效的训练速度：能够训练模型“在使用标准多核CPU的情况下">
+<meta property="og:locale" content="zh">
+<meta property="og:updated_time" content="2019-05-22T14:37:51.023Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="task6">
+<meta name="twitter:description" content="FastText 原理1、应用场景fastText是一种Facebook AI Research在16年开源的一个文本分类器。 其特点就是fast。相对于其它文本分类模型，如SVM，Logistic Regression和neural network等模型，fastText在保持分类效果的同时，大大缩短了训练时间。 2、优缺点适合大型数据+高效的训练速度：能够训练模型“在使用标准多核CPU的情况下">
+  
+    <link rel="alternate" href="/baiju/atom.xml" title="白驹" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/baiju/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/baiju/" id="logo">白驹</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/baiju/">Home</a>
+        
+          <a class="main-nav-link" href="/baiju/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/baiju/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://day6.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-task6" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/baiju/2019/05/22/task6/" class="article-date">
+  <time datetime="2019-05-22T14:28:50.000Z" itemprop="datePublished">2019-05-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      task6
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="FastText-原理"><a href="#FastText-原理" class="headerlink" title="FastText 原理"></a>FastText 原理</h2><p>1、应用场景<br>fastText是一种Facebook AI Research在16年开源的一个文本分类器。 其特点就是fast。相对于其它文本分类模型，如SVM，Logistic Regression和neural network等模型，fastText在保持分类效果的同时，大大缩短了训练时间。</p>
+<p>2、优缺点<br>适合大型数据+高效的训练速度：能够训练模型“在使用标准多核CPU的情况下10分钟内处理超过10亿个词汇”<br>支持多语言表达：利用其语言形态结构，fastText能够被设计用来支持包括英语、德语、西班牙语、法语以及捷克语等多种语言。FastText的性能要比时下流行的word2vec工具明显好上不少，也比其他目前最先进的词态词汇表征要好。<br>fastText专注于文本分类，在许多标准问题上实现当下最好的表现（例如文本倾向性分析或标签预测）。<br>3、FastText的原理<br>fastText 方法包含三部分：模型架构、层次 Softmax 和 N-gram 特征。</p>
+<p>fastText 模型输入一个词的序列（一段文本或者一句话)，输出这个词序列属于不同类别的概率。<br>序列中的词和词组组成特征向量，特征向量通过线性变换映射到中间层，中间层再映射到标签。<br>fastText 在预测标签时使用了非线性激活函数，但在中间层不使用非线性激活函数。<br>fastText 模型架构和 Word2Vec 中的 CBOW 模型很类似。不同之处在于，fastText 预测标签，而 CBOW 模型预测中间词。</p>
+<p>第一部分：fastText的模型架构类似于CBOW，两种模型都是基于Hierarchical Softmax，都是三层架构：输入层、 隐藏层、输出层。</p>
+<p>第二部分：层次之间的映射 </p>
+<p>第三部分：fastText的N-gram特征 </p>
+<p>  常用的特征是词袋模型（将输入数据转化为对应的Bow形式）。但词袋模型不能考虑词之间的顺序，因此 fastText 还加入了 N-gram 特征。<br>  “我 爱 她” 这句话中的词袋模型特征是 “我”，“爱”, “她”。这些特征和句子 “她 爱 我” 的特征是一样的。如果加入 2-Ngram，第一句话的特征还有 “我-爱” 和 “爱-她”，这两句话 “我 爱 她” 和 “她 爱 我” 就能区别开来了。当然，为了提高效率，我们需要过滤掉低频的 N-gram。 </p>
+<p>4、FastText词向量与word2vec对比</p>
+<p>  FastText= word2vec中 cbow + h-softmax的灵活使用<br>灵活体现在两个方面：</p>
+<p>  模型的输出层：word2vec的输出层，对应的是每一个term，计算某term的概率最大；而fasttext的输出层对应的是分类的label。不过不管输出层对应的是什么内容，起对应的vector都不会被保留和使用；<br>  模型的输入层：word2vec的输入层，是 context window 内的term；而fasttext 对应的整个sentence的内容，包括term，也包括 n-gram的内容；两者本质的不同，体现在 h-softmax的使用。<br>Word2vec的目的是得到词向量，该词向量 最终是在输入层得到，输出层对应的 h-softmax 也会生成一系列的向量，但最终都被抛弃，不会使用。<br>fasttext则充分利用了h-softmax的分类功能，遍历分类树的所有叶节点，找到概率最大的label（一个或者N个）。</p>
+<h2 id="FastText-Python"><a href="#FastText-Python" class="headerlink" title="FastText Python"></a>FastText Python</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># _*_coding:utf-8 _*_</span><br><span class="line">import logging</span><br><span class="line">logging.basicConfig(format=&apos;%(asctime)s : %(levelname)s : %(message)s&apos;, level=logging.INFO)</span><br><span class="line">import fasttext</span><br><span class="line">#训练模型</span><br><span class="line">classifier = fasttext.supervised(&quot;news_fasttext_train.txt&quot;,&quot;news_fasttext.model&quot;,label_prefix=&quot;__label__&quot;)</span><br><span class="line"></span><br><span class="line">#load训练好的模型</span><br><span class="line">#classifier = fasttext.load_model(&apos;news_fasttext.model.bin&apos;, label_prefix=&apos;__label__&apos;)</span><br><span class="line">result = classifier.test(&quot;news_fasttext_test.txt&quot;)</span><br><span class="line">print result.precision</span><br><span class="line">print result.recall</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjvzc0u35000492fy07czm55p" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/baiju/2019/05/19/task5/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">task5</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/baiju/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/baiju/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/baiju/2019/05/22/task6/">task6</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/19/task5/">task5</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/16/task4/">task4</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/16/task3/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/16/task2/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 baiju<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/baiju/" class="mobile-nav-link">Home</a>
+  
+    <a href="/baiju/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/baiju/fancybox/jquery.fancybox.css">
+  <script src="/baiju/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/baiju/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
