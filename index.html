@@ -63,6 +63,53 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-task7" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/baiju/2019/05/24/task7/" class="article-date">
+  <time datetime="2019-05-24T13:39:17.000Z" itemprop="datePublished">2019-05-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/baiju/2019/05/24/task7/">task7</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="卷积神经网络"><a href="#卷积神经网络" class="headerlink" title="卷积神经网络"></a>卷积神经网络</h1><h2 id="卷积运算"><a href="#卷积运算" class="headerlink" title="卷积运算"></a>卷积运算</h2><p>  把数据通过一个卷积核变化成特征，便于后面的分离。计算方式与信号系统中的相同。</p>
+<p>  离散卷积可以看作矩阵乘法，这个矩阵元素被限制为必须和另外一些元素相等。卷积核函数（特征映射）是由学习算法优化得到张量的参数，它可以提取不同需求的信息。每次框选与移动相当于一个神经元，多通道则有多维矩阵组成的张量，相比多层神经网络其实就是拿掉了一些参数。</p>
+<h2 id="池化运算"><a href="#池化运算" class="headerlink" title="池化运算"></a>池化运算</h2><p>  把很多数据用最大值或者平均值代替。目的是降低数据量。</p>
+<h2 id="Text-CNN"><a href="#Text-CNN" class="headerlink" title="Text-CNN"></a>Text-CNN</h2><p>  <img src="/2019/05/24/task7/20180130191852299.png" alt="Text_CNN"></p>
+<h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"># 1 get paramater</span><br><span class="line">  parse = argparse.ArgumentParser(description=&apos;Paramaters for construct TextCNN Model&apos;)</span><br><span class="line">  # #方式一 type = bool</span><br><span class="line">  # parse.add_argument(&apos;--nonstatic&apos;,type=ast.literal_eval,help=&apos;use textcnn nonstatic or not&apos;,dest=&apos;tt&apos;)</span><br><span class="line">  # 方式二 取bool值的方式)添加互斥的参数</span><br><span class="line">  group_static = parse.add_mutually_exclusive_group(required=True)</span><br><span class="line">  group_static.add_argument(&apos;--static&apos;, dest=&apos;static_flag&apos;, action=&apos;store_true&apos;, help=&apos;use static Text_CNN&apos;)</span><br><span class="line">  group_static.add_argument(&apos;--nonstatic&apos;, dest=&apos;static_flag&apos;, action=&apos;store_false&apos;, help=&apos;use nonstatic Text_CNN&apos;)</span><br><span class="line"></span><br><span class="line">  group_word_vec = parse.add_mutually_exclusive_group(required=True)</span><br><span class="line">  group_word_vec.add_argument(&apos;--word2vec&apos;, dest=&apos;wordvec_flag&apos;, action=&apos;store_true&apos;, help=&apos;word_vec is word2vec&apos;)</span><br><span class="line">  group_word_vec.add_argument(&apos;--rand&apos;, dest=&apos;wordvec_flag&apos;, action=&apos;store_false&apos;, help=&apos;word_vec is rand&apos;)</span><br><span class="line"></span><br><span class="line">  group_shuffer_batch = parse.add_mutually_exclusive_group(required=False)</span><br><span class="line">  group_shuffer_batch.add_argument(&apos;--shuffer&apos;, dest=&apos;shuffer_flag&apos;, action=&apos;store_true&apos;, help=&apos;the train do shuffer&apos;)</span><br><span class="line">  group_shuffer_batch.add_argument(&apos;--no-shuffer&apos;, dest=&apos;shuffer_flag&apos;, action=&apos;store_false&apos;,</span><br><span class="line">                                   help=&apos;the train do not shuffer&apos;)</span><br><span class="line"></span><br><span class="line">  parse.add_argument(&apos;--learnrate&apos;, type=float, dest=&apos;learnrate&apos;, help=&apos;the NN learnRate&apos;, default=0.05)</span><br><span class="line">  parse.add_argument(&apos;--epochs&apos;, type=int, dest=&apos;epochs&apos;, help=&apos;the model train epochs&apos;, default=10)</span><br><span class="line">  parse.add_argument(&apos;--batch_size&apos;, type=int, dest=&apos;batch_size&apos;, help=&apos;the train gd batch size.(50-300)&apos;, default=50)</span><br><span class="line">  parse.add_argument(&apos;--dropout_pro&apos;, type=float, dest=&apos;dropout_pro&apos;, help=&apos;the nn layer dropout_pro&apos;, default=0.5)</span><br><span class="line"></span><br><span class="line">  parse.set_defaults(static_flag=True)</span><br><span class="line">  parse.set_defaults(wordvec_flag=True)</span><br><span class="line">  parse.set_defaults(shuffer_flag=False)</span><br><span class="line"></span><br><span class="line">  args = parse.parse_args()</span><br><span class="line"></span><br><span class="line">  # 2 load data</span><br><span class="line">  print(&apos;load data. . .&apos;)</span><br><span class="line">  X = pickle.load(open(&apos;./NLP/result/word_vec.p&apos;,&apos;rb&apos;))</span><br><span class="line"></span><br><span class="line">  word_vecs_rand, word_vecs, word_cab, sentence_max_len, revs = X[0],X[1],X[2],X[3],X[4]</span><br><span class="line"></span><br><span class="line">  print(&apos;load data finish. . .&apos;)</span><br><span class="line">  # configuration tf</span><br><span class="line">  filter_sizes = [3, 4, 5]</span><br><span class="line">  filter_numbers = 100</span><br><span class="line">  embedding_size = 300</span><br><span class="line">  # use word2vec or not</span><br><span class="line">  W = word_vecs_rand</span><br><span class="line">  if args.wordvec_flag:</span><br><span class="line">      W = word_vecs</span><br><span class="line">      pass</span><br><span class="line">  # pdb.set_trace()</span><br><span class="line">  word_ids,W_list = process_data.getWordsVect(W)</span><br><span class="line"></span><br><span class="line">  # use static train or not</span><br><span class="line">  static_falg = args.static_flag</span><br><span class="line">  # use shuffer the data or not</span><br><span class="line">  shuffer_falg = args.shuffer_flag</span><br><span class="line">  #交叉验证</span><br><span class="line">  results = []</span><br><span class="line">  for index in tqdm(range(10)):</span><br><span class="line">      #打调试断点</span><br><span class="line">      # pdb.set_trace()</span><br><span class="line">      # train_x, train_y, test_x, test_y = process_data.get_train_test_data1(W,revs,index,sentence_max_len,default_values=0.0,vec_size=300)</span><br><span class="line">      train_x, train_y, test_x, test_y = process_data.get_train_test_data2(word_ids,revs,index,sentence_max_len)</span><br><span class="line">      # 3 create TextCNN model</span><br><span class="line">      text_cnn = TextCNN(W_list,shuffer_falg,static_falg,filter_numbers,filter_sizes,sentence_max_len,embedding_size,args.learnrate,args.epochs,args.batch_size,args.dropout_pro)</span><br><span class="line">      # 4 start train</span><br><span class="line">      text_cnn.train(train_x,train_y)</span><br><span class="line">      # 5 validataion</span><br><span class="line">      accur,loss = text_cnn.validataion(test_x, test_y)</span><br><span class="line">      #</span><br><span class="line">      results.append(accur)</span><br><span class="line">      print(&apos;cv &#123;&#125; accur is :&#123;:.3f&#125; loss is &#123;:.3f&#125;&apos;.format(index+1,accur,loss))</span><br><span class="line">      text_cnn.close()</span><br><span class="line">  print(&apos;last accuracy is &#123;&#125;&apos;.format(np.mean(results)))</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.zhihu.com/question/49376084" target="_blank" rel="noopener">如何理解卷积神经网络（CNN）中的卷积和池化？</a></li>
+<li><a href="https://blog.csdn.net/u014732537/article/details/79573174" target="_blank" rel="noopener">卷积神经网络(TextCNN)在句子分类上的实现</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/24/task7/" data-id="cjw25v189000796tv33r4v1c5" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-task6" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/baiju/2019/05/22/task6/" class="article-date">
@@ -100,7 +147,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjvzc0u35000492fy07czm55p" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjw25v188000696tvbxndnxnp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -153,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjvzc0u37000692fy6wuput0m" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjw25v187000596tvhq9ueefl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -209,7 +256,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjvzc0u33000392fye6npjjrg" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjw25v185000496tvnjsfxf6r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -248,7 +295,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjvzc0u36000592fy3z8mp93z" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjw25v184000396tv1zjwsupm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -275,7 +322,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjvzc0u2z000192fy19xso80a" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjw25v183000296tvjd0vv8p4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -357,7 +404,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjvzc0u31000292fy1cbopiu7" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjw25v181000196tvsti47l8s" class="article-share-link">Share</a>
       
       
     </footer>
@@ -426,7 +473,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjvzc0u38000792fy2tlc69o7" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjw25v18a000896tvin4w5gvj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -471,7 +518,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjvzc0u2t000092fygl4iy1da" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjw25v17v000096tv1e1qjasj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -491,9 +538,23 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/baiju/tags/卷积神经网络/" style="font-size: 10px;">卷积神经网络</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
@@ -512,6 +573,10 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       <ul>
         
           <li>
+            <a href="/baiju/2019/05/24/task7/">task7</a>
+          </li>
+        
+          <li>
             <a href="/baiju/2019/05/22/task6/">task6</a>
           </li>
         
@@ -525,10 +590,6 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
         
           <li>
             <a href="/baiju/2019/05/16/task3/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/baiju/2019/05/16/task2/">(no title)</a>
           </li>
         
       </ul>
