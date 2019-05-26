@@ -63,6 +63,63 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-task8" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/baiju/2019/05/26/task8/" class="article-date">
+  <time datetime="2019-05-26T01:33:48.000Z" itemprop="datePublished">2019-05-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/baiju/2019/05/26/task8/">task8</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h1><p>  递归神经网络（RNN）是神经网络的一种。单纯的RNN因为无法处理随着递归，权重指数级爆炸或梯度消失问题，难以捕捉长期时间关联；而结合不同的LSTM可以很好解决这个问题。</p>
+<p>  对于神经网络的训练，梯度在训练中起到很关键的作用。 如果在训练过程中发生了梯度消失，这也就意味着我们的权重无法被更新，最终导致训练失败。而梯度爆炸所带来的梯度过大，从而大幅度更新网络参数，造成网络不稳定（可以理解为梯度步伐太大）。在极端情况下，权重的值变得特别大，以至于结果会溢出（NaN值）</p>
+<h2 id="这会造成哪些问题？"><a href="#这会造成哪些问题？" class="headerlink" title="这会造成哪些问题？"></a>这会造成哪些问题？</h2><ul>
+<li>梯度消失会导致我们的神经网络中前面层的网络权重无法得到更新，也就停止了学习。</li>
+<li>梯度爆炸会使得学习不稳定， 参数变化太大导致无法获取最优参数。</li>
+<li>在深度多层感知机网络中，梯度爆炸会导致网络不稳定，最好的结果是无法从训练数据中学习，最坏的结果是由于权重值为NaN而无法更新权重。</li>
+<li>在循环神经网络（RNN）中，梯度爆炸会导致网络不稳定，使得网络无法从训练数据中得到很好的学习，最好的结果是网络不能在长输入数据序列上学习。</li>
+</ul>
+<h2 id="随时间反向传播（BPTT）算法"><a href="#随时间反向传播（BPTT）算法" class="headerlink" title="随时间反向传播（BPTT）算法"></a>随时间反向传播（BPTT）算法</h2><p>  Backpropagation through time (BPTT) is a gradient-based technique for training certain types of recurrent neural networks. It can be used to train Elman networks. The algorithm was independently derived by numerous researchers.</p>
+<h2 id="长短期记忆（LSTTM）"><a href="#长短期记忆（LSTTM）" class="headerlink" title="长短期记忆（LSTTM）"></a>长短期记忆（LSTTM）</h2><p>  长短期记忆（英语：Long Short-Term Memory，LSTM）是一种时间递归神经网络（RNN）[1]，论文首次发表于1997年。由于独特的设计结构，LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件。</p>
+<p>  LSTM的表现通常比时间递归神经网络及隐马尔科夫模型（HMM）更好，比如用在不分段连续手写识别上[2]。2009年，用LSTM构建的人工神经网络模型赢得过ICDAR手写识别比赛冠军。LSTM还普遍用于自主语音识别，2013年运用TIMIT自然演讲数据库达成17.7%错误率的纪录。作为非线性模型，LSTM可作为复杂的非线性单元用于构造更大型深度神经网络。</p>
+<h2 id="Text-RNN"><a href="#Text-RNN" class="headerlink" title="Text-RNN"></a>Text-RNN</h2><p>  TextCNN擅长捕获更短的序列信息，但是TextRNN擅长捕获更长的序列信息。具体到文本分类任务中，BiLSTM从某种意义上可以理解为可以捕获变长且双向的N-Gram信息。</p>
+<p>  将CNN和RNN用在文本分类中都能取得显著的效果，但是有一个不错的地方就是可解释性不好，特别是去分析错误案例的时候，而注意力机制[Attention]能够很好的给出每个词对结果的贡献程度，已经成为Seq2Seq模型的标配，实际上文本分类也可以理解为一种特殊的Seq2Seq模型。因此，注意力机制的引入，可以在某种程度上提高深度学习文本分类模型的可解释性。</p>
+<h3 id="python"><a href="#python" class="headerlink" title="python"></a>python</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">learn = tf.contrib.learn</span><br><span class="line"></span><br><span class="line">def rnn_model(features, target):</span><br><span class="line">    &quot;&quot;&quot;RNN model to predict from sequence of words to a class.&quot;&quot;&quot;</span><br><span class="line">    # Convert indexes of words into embeddings.</span><br><span class="line">    # This creates embeddings matrix of [n_words, EMBEDDING_SIZE] and then</span><br><span class="line">    # maps word indexes of the sequence into [batch_size, sequence_length,</span><br><span class="line">    # EMBEDDING_SIZE].</span><br><span class="line">    word_vectors = tf.contrib.layers.embed_sequence(</span><br><span class="line">        features, vocab_size=n_words, embed_dim=EMBEDDING_SIZE, scope=&apos;words&apos;)</span><br><span class="line"></span><br><span class="line">    # Split into list of embedding per word, while removing doc length dim.</span><br><span class="line">    # word_list results to be a list of tensors [batch_size, EMBEDDING_SIZE].</span><br><span class="line">    word_list = tf.unstack(word_vectors, axis=1)</span><br><span class="line"></span><br><span class="line">    # Create a Gated Recurrent Unit cell with hidden size of EMBEDDING_SIZE.</span><br><span class="line">    cell = tf.contrib.rnn.GRUCell(EMBEDDING_SIZE)</span><br><span class="line"></span><br><span class="line">    # Create an unrolled Recurrent Neural Networks to length of</span><br><span class="line">    # MAX_DOCUMENT_LENGTH and passes word_list as inputs for each unit.</span><br><span class="line">    _, encoding = tf.contrib.rnn.static_rnn(cell, word_list, dtype=tf.float32)</span><br><span class="line"></span><br><span class="line">    # Given encoding of RNN, take encoding of last step (e.g hidden size of the</span><br><span class="line">    # neural network of last step) and pass it as features for logistic</span><br><span class="line">    # regression over output classes.</span><br><span class="line">    # target = tf.one_hot(target, 15, 1, 0)</span><br><span class="line">    logits = tf.contrib.layers.fully_connected(encoding, 2794, activation_fn=None)</span><br><span class="line">    loss = tf.losses.softmax_cross_entropy(logits, target)</span><br><span class="line">    tf.losses.softmax_cross_entropy(onehot_labels=tar)</span><br><span class="line">    # Create a training op.</span><br><span class="line">    train_op = tf.contrib.layers.optimize_loss(</span><br><span class="line">        loss,</span><br><span class="line">        tf.contrib.framework.get_global_step(),</span><br><span class="line">        optimizer=&apos;Adam&apos;,</span><br><span class="line">        learning_rate=0.01)</span><br><span class="line"></span><br><span class="line">    return (&#123;</span><br><span class="line">                &apos;class&apos;: tf.argmax(logits, 1),</span><br><span class="line">                &apos;prob&apos;: tf.nn.softmax(logits)</span><br><span class="line">            &#125;, loss, train_op)</span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    data, label = data_utils.read_raw_data(FLAGS.data_dir + FLAGS.data_file, FLAGS.data_dir + FLAGS.label_file)</span><br><span class="line">    # Process vocabulary</span><br><span class="line">    vocab_processor = learn.preprocessing.VocabularyProcessor(MAX_DOCUMENT_LENGTH)</span><br><span class="line"></span><br><span class="line">    x = np.array(list(vocab_processor.fit_transform(data)))</span><br><span class="line">    del data</span><br><span class="line">    # Process label to one hot vector</span><br><span class="line">    lb = LabelBinarizer()</span><br><span class="line">    y = np.array(list(lb.fit_transform(label)))</span><br><span class="line">    del label</span><br><span class="line">    # np.random.seed(10)</span><br><span class="line">    # shuffle_indices = np.random.permutation(np.arange(len(y)))</span><br><span class="line">    # x_shuffled = tf.random_shuffle(x, seed=10)</span><br><span class="line">    # y_shuffled = tf.random_shuffle(y, seed=10)</span><br><span class="line">    # x_shuffled = x[shuffle_indices]</span><br><span class="line">    # y_shuffled = y[shuffle_indices]</span><br><span class="line">    x_shuffled = x</span><br><span class="line">    y_shuffled = y</span><br><span class="line">    dev_sample_index = -1 * int(FLAGS.test_sample_percentage * float(len(y)))</span><br><span class="line">    x_train, x_test = x_shuffled[:dev_sample_index], x_shuffled[dev_sample_index:]</span><br><span class="line">    y_train, y_test = y_shuffled[:dev_sample_index], y_shuffled[dev_sample_index:]</span><br><span class="line">    # pdb.set_trace()</span><br><span class="line"></span><br><span class="line">    # Build model</span><br><span class="line">    # Switch between rnn_model and bag_of_words_model to test different models.</span><br><span class="line">    model_fn = rnn_model</span><br><span class="line">    if FLAGS.bow_model:</span><br><span class="line">        model_fn = bag_of_words_model</span><br><span class="line"></span><br><span class="line">    classifier = learn.SKCompat(learn.Estimator(model_fn=model_fn))</span><br><span class="line"></span><br><span class="line">    # Train and predict</span><br><span class="line">    classifier.fit(x_train, y_train, steps=20000)</span><br><span class="line">    y_predicted = [</span><br><span class="line">        p[&apos;class&apos;] for p in classifier.predict(x_test, as_iterable=True)]</span><br><span class="line">    score = metrics.accuracy_score(y_test, y_predicted)</span><br><span class="line">    print(&apos;Accuracy: &#123;0:f&#125;&apos;.format(score))</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://www.cnblogs.com/pinard/p/6509630.html" target="_blank" rel="noopener">循环神经网络(RNN)模型与前向反向传播算法</a></li>
+<li><a href="https://www.cnblogs.com/wuliytTaotao/p/9512963.html" target="_blank" rel="noopener">循环神经网络（Recurrent Neural Network，RNN）</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/44163528" target="_blank" rel="noopener">RNN 的梯度消失问题</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%95%B7%E7%9F%AD%E6%9C%9F%E8%A8%98%E6%86%B6" target="_blank" rel="noopener">长短期记忆</a></li>
+<li><a href="https://github.com/huazhisong/TextRNN/blob/master/train_rnn.py" target="_blank" rel="noopener">TextRNN</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/26/task8/" data-id="cjw51f13i00087t1qe0kcm60l" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-task7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/baiju/2019/05/24/task7/" class="article-date">
@@ -98,7 +155,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/24/task7/" data-id="cjw25v189000796tv33r4v1c5" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/24/task7/" data-id="cjw51f13h00077t1q3njlqea0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li></ul>
@@ -147,7 +204,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjw25v188000696tvbxndnxnp" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjw51f13h00067t1q76fzyjyt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -200,7 +257,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjw25v187000596tvhq9ueefl" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjw51f13f00047t1qmhaukcpx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -256,7 +313,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjw25v185000496tvnjsfxf6r" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjw51f13c00027t1qfsldb84c" class="article-share-link">Share</a>
       
       
     </footer>
@@ -295,7 +352,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjw25v184000396tv1zjwsupm" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjw51f13g00057t1qhlpd9boe" class="article-share-link">Share</a>
       
       
     </footer>
@@ -322,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjw25v183000296tvjd0vv8p4" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjw51f13e00037t1qtzfgfdno" class="article-share-link">Share</a>
       
       
     </footer>
@@ -404,7 +461,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjw25v181000196tvsti47l8s" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjw51f13a00017t1qh3py8nwi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -473,7 +530,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjw25v18a000896tvin4w5gvj" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjw51f13q000a7t1qg3uuau9i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -518,7 +575,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjw25v17v000096tv1e1qjasj" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjw51f13500007t1q0ksuq74e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -573,6 +630,10 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       <ul>
         
           <li>
+            <a href="/baiju/2019/05/26/task8/">task8</a>
+          </li>
+        
+          <li>
             <a href="/baiju/2019/05/24/task7/">task7</a>
           </li>
         
@@ -586,10 +647,6 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
         
           <li>
             <a href="/baiju/2019/05/16/task4/">task4</a>
-          </li>
-        
-          <li>
-            <a href="/baiju/2019/05/16/task3/">(no title)</a>
           </li>
         
       </ul>
