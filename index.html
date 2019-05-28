@@ -63,6 +63,57 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-task9" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/baiju/2019/05/27/task9/" class="article-date">
+  <time datetime="2019-05-27T15:48:19.000Z" itemprop="datePublished">2019-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/baiju/2019/05/27/task9/">task9</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Attention原理"><a href="#Attention原理" class="headerlink" title="Attention原理"></a>Attention原理</h1><p>  在传统的 encoder-decoder 模型中，encoder 读取输入的句子将其转换为一个定长的向量，然后decoder 再将这个向量解码为对应的输出。然而，此时信息被压缩到一个定长的向量中，内容比较复杂，同时对于较长的输入句子，转换成定长向量可能带来一定的损失，因此随着输入序列长度的上升，这种结构的效果面临着挑战。</p>
+<p>  Attention 机制可以解决这种由长序列到定长向量转化而造成的信息损失问题。Attention 即注意力，它和人看文章或者图片时的思路类似，即将注意力集中到某几个区域上来帮助当前决策。</p>
+<h1 id="HAN的原理（Hierarchical-Attention-Networks）"><a href="#HAN的原理（Hierarchical-Attention-Networks）" class="headerlink" title="HAN的原理（Hierarchical Attention Networks）"></a>HAN的原理（Hierarchical Attention Networks）</h1><ul>
+<li>第一： 利用文档原有的层次结构特性（句子是由单词组成，文档是由句子组成），先使用单词的词向量表示句子，再此基础上以句子向量构建文档的信息表示。</li>
+<li>第二：在文档中，句子对文档的重要性贡献有差异，在句子中单词对句子的重要性贡献也有差异。而单词和句子的重要性依赖于上下文环境。相同的单词，在不同的上下文中所表现出的重要性是不一样的。为了描述这种情况，引入了Attention机制来描述这种重要性。<br>文章分别从句子级和文档级两个层次使用Attention机制。Attention机制可以带来两个优点：一个可以提升分类性能，第二个可以提升识别出在影响最终分类决策的单词或句子的重要性。<br><img src="images/han.webp" alt="HAN"></li>
+</ul>
+<h1 id="python"><a href="#python" class="headerlink" title="python"></a>python</h1><p>  AttLayer:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">class AttLayer(Layer):</span><br><span class="line">    def __init__(self, attention_dim):</span><br><span class="line">        self.init = initializers.get(&apos;normal&apos;)</span><br><span class="line">        self.supports_masking = True</span><br><span class="line">        self.attention_dim = attention_dim</span><br><span class="line">        super(AttLayer, self).__init__()</span><br><span class="line"></span><br><span class="line">    def build(self, input_shape):</span><br><span class="line">        assert len(input_shape) == 3</span><br><span class="line">        self.W = K.variable(self.init((input_shape[-1], self.attention_dim)))</span><br><span class="line">        self.b = K.variable(self.init((self.attention_dim, )))</span><br><span class="line">        self.u = K.variable(self.init((self.attention_dim, 1)))</span><br><span class="line">        self.trainable_weights = [self.W, self.b, self.u]</span><br><span class="line">        super(AttLayer, self).build(input_shape)</span><br><span class="line"></span><br><span class="line">    def compute_mask(self, inputs, mask=None):</span><br><span class="line">        return mask</span><br><span class="line"></span><br><span class="line">    def call(self, x, mask=None):</span><br><span class="line">        # size of x :[batch_size, sel_len, attention_dim]</span><br><span class="line">        # size of u :[batch_size, attention_dim]</span><br><span class="line">        # uit = tanh(xW+b)</span><br><span class="line">        uit = K.tanh(K.bias_add(K.dot(x, self.W), self.b))</span><br><span class="line">        ait = K.dot(uit, self.u)</span><br><span class="line">        ait = K.squeeze(ait, -1)</span><br><span class="line"></span><br><span class="line">        ait = K.exp(ait)</span><br><span class="line"></span><br><span class="line">        if mask is not None:</span><br><span class="line">            # Cast the mask to floatX to avoid float64 upcasting in theano</span><br><span class="line">            ait *= K.cast(mask, K.floatx())</span><br><span class="line">        ait /= K.cast(K.sum(ait, axis=1, keepdims=True) + K.epsilon(), K.floatx())</span><br><span class="line">        ait = K.expand_dims(ait)</span><br><span class="line">        weighted_input = x * ait</span><br><span class="line">        output = K.sum(weighted_input, axis=1)</span><br><span class="line"></span><br><span class="line">        return output</span><br><span class="line"></span><br><span class="line">    def compute_output_shape(self, input_shape):</span><br><span class="line">        return (input_shape[0], input_shape[-1])</span><br></pre></td></tr></table></figure></p>
+<p>  train:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">sentence_input = Input(shape=(MAX_SENT_LENGTH,), dtype=&apos;int32&apos;)</span><br><span class="line">embedded_sequences = embedding_layer(sentence_input)</span><br><span class="line">l_lstm = Bidirectional(GRU(100, return_sequences=True))(embedded_sequences)</span><br><span class="line">l_att = AttLayer(100)(l_lstm)</span><br><span class="line">sentEncoder = Model(sentence_input, l_att)</span><br><span class="line"></span><br><span class="line">review_input = Input(shape=(MAX_SENTS, MAX_SENT_LENGTH), dtype=&apos;int32&apos;)</span><br><span class="line">review_encoder = TimeDistributed(sentEncoder)(review_input)</span><br><span class="line">l_lstm_sent = Bidirectional(GRU(100, return_sequences=True))(review_encoder)</span><br><span class="line">l_att_sent = AttLayer(100)(l_lstm_sent)</span><br><span class="line">preds = Dense(2, activation=&apos;softmax&apos;)(l_att_sent)</span><br><span class="line">model = Model(review_input, preds)</span><br><span class="line"></span><br><span class="line">model.compile(loss=&apos;categorical_crossentropy&apos;,</span><br><span class="line">              optimizer=&apos;rmsprop&apos;,</span><br><span class="line">              metrics=[&apos;acc&apos;])</span><br><span class="line"></span><br><span class="line">print(&quot;model fitting - Hierachical attention network&quot;)</span><br><span class="line">model.fit(x_train, y_train, validation_data=(x_val, y_val),</span><br><span class="line">          nb_epoch=10, batch_size=50)</span><br></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://pelhans.com/2019/04/26/deepdive_tensorflow-note10/" target="_blank" rel="noopener">深度学习笔记</a></li>
+<li><a href="https://blog.csdn.net/yyy430/article/details/88635646" target="_blank" rel="noopener">【NLP实践-Task9 Attention原理 】attention &amp; HAN &amp; 文本分类实战</a></li>
+<li><a href="https://github.com/richliao/textClassifier" target="_blank" rel="noopener">https://github.com/richliao/textClassifier</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/27/task9/" data-id="cjw72vlid000aav1qtr6dbibj" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/Attention原理/">Attention原理</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-task8" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/baiju/2019/05/26/task8/" class="article-date">
@@ -110,9 +161,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/26/task8/" data-id="cjw51f13i00087t1qe0kcm60l" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/26/task8/" data-id="cjw72vli50008av1qulh8e9o9" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/循环和递归神经网络/">循环和递归神经网络</a></li></ul>
+
     </footer>
   </div>
   
@@ -145,7 +198,7 @@
         <h1 id="卷积神经网络"><a href="#卷积神经网络" class="headerlink" title="卷积神经网络"></a>卷积神经网络</h1><h2 id="卷积运算"><a href="#卷积运算" class="headerlink" title="卷积运算"></a>卷积运算</h2><p>  把数据通过一个卷积核变化成特征，便于后面的分离。计算方式与信号系统中的相同。</p>
 <p>  离散卷积可以看作矩阵乘法，这个矩阵元素被限制为必须和另外一些元素相等。卷积核函数（特征映射）是由学习算法优化得到张量的参数，它可以提取不同需求的信息。每次框选与移动相当于一个神经元，多通道则有多维矩阵组成的张量，相比多层神经网络其实就是拿掉了一些参数。</p>
 <h2 id="池化运算"><a href="#池化运算" class="headerlink" title="池化运算"></a>池化运算</h2><p>  把很多数据用最大值或者平均值代替。目的是降低数据量。</p>
-<h2 id="Text-CNN"><a href="#Text-CNN" class="headerlink" title="Text-CNN"></a>Text-CNN</h2><p>  <img src="/2019/05/24/task7/20180130191852299.png" alt="Text_CNN"></p>
+<h2 id="Text-CNN"><a href="#Text-CNN" class="headerlink" title="Text-CNN"></a>Text-CNN</h2><p>  <img src="images/20180130191852299.png" alt="Text_CNN"></p>
 <h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"># 1 get paramater</span><br><span class="line">  parse = argparse.ArgumentParser(description=&apos;Paramaters for construct TextCNN Model&apos;)</span><br><span class="line">  # #方式一 type = bool</span><br><span class="line">  # parse.add_argument(&apos;--nonstatic&apos;,type=ast.literal_eval,help=&apos;use textcnn nonstatic or not&apos;,dest=&apos;tt&apos;)</span><br><span class="line">  # 方式二 取bool值的方式)添加互斥的参数</span><br><span class="line">  group_static = parse.add_mutually_exclusive_group(required=True)</span><br><span class="line">  group_static.add_argument(&apos;--static&apos;, dest=&apos;static_flag&apos;, action=&apos;store_true&apos;, help=&apos;use static Text_CNN&apos;)</span><br><span class="line">  group_static.add_argument(&apos;--nonstatic&apos;, dest=&apos;static_flag&apos;, action=&apos;store_false&apos;, help=&apos;use nonstatic Text_CNN&apos;)</span><br><span class="line"></span><br><span class="line">  group_word_vec = parse.add_mutually_exclusive_group(required=True)</span><br><span class="line">  group_word_vec.add_argument(&apos;--word2vec&apos;, dest=&apos;wordvec_flag&apos;, action=&apos;store_true&apos;, help=&apos;word_vec is word2vec&apos;)</span><br><span class="line">  group_word_vec.add_argument(&apos;--rand&apos;, dest=&apos;wordvec_flag&apos;, action=&apos;store_false&apos;, help=&apos;word_vec is rand&apos;)</span><br><span class="line"></span><br><span class="line">  group_shuffer_batch = parse.add_mutually_exclusive_group(required=False)</span><br><span class="line">  group_shuffer_batch.add_argument(&apos;--shuffer&apos;, dest=&apos;shuffer_flag&apos;, action=&apos;store_true&apos;, help=&apos;the train do shuffer&apos;)</span><br><span class="line">  group_shuffer_batch.add_argument(&apos;--no-shuffer&apos;, dest=&apos;shuffer_flag&apos;, action=&apos;store_false&apos;,</span><br><span class="line">                                   help=&apos;the train do not shuffer&apos;)</span><br><span class="line"></span><br><span class="line">  parse.add_argument(&apos;--learnrate&apos;, type=float, dest=&apos;learnrate&apos;, help=&apos;the NN learnRate&apos;, default=0.05)</span><br><span class="line">  parse.add_argument(&apos;--epochs&apos;, type=int, dest=&apos;epochs&apos;, help=&apos;the model train epochs&apos;, default=10)</span><br><span class="line">  parse.add_argument(&apos;--batch_size&apos;, type=int, dest=&apos;batch_size&apos;, help=&apos;the train gd batch size.(50-300)&apos;, default=50)</span><br><span class="line">  parse.add_argument(&apos;--dropout_pro&apos;, type=float, dest=&apos;dropout_pro&apos;, help=&apos;the nn layer dropout_pro&apos;, default=0.5)</span><br><span class="line"></span><br><span class="line">  parse.set_defaults(static_flag=True)</span><br><span class="line">  parse.set_defaults(wordvec_flag=True)</span><br><span class="line">  parse.set_defaults(shuffer_flag=False)</span><br><span class="line"></span><br><span class="line">  args = parse.parse_args()</span><br><span class="line"></span><br><span class="line">  # 2 load data</span><br><span class="line">  print(&apos;load data. . .&apos;)</span><br><span class="line">  X = pickle.load(open(&apos;./NLP/result/word_vec.p&apos;,&apos;rb&apos;))</span><br><span class="line"></span><br><span class="line">  word_vecs_rand, word_vecs, word_cab, sentence_max_len, revs = X[0],X[1],X[2],X[3],X[4]</span><br><span class="line"></span><br><span class="line">  print(&apos;load data finish. . .&apos;)</span><br><span class="line">  # configuration tf</span><br><span class="line">  filter_sizes = [3, 4, 5]</span><br><span class="line">  filter_numbers = 100</span><br><span class="line">  embedding_size = 300</span><br><span class="line">  # use word2vec or not</span><br><span class="line">  W = word_vecs_rand</span><br><span class="line">  if args.wordvec_flag:</span><br><span class="line">      W = word_vecs</span><br><span class="line">      pass</span><br><span class="line">  # pdb.set_trace()</span><br><span class="line">  word_ids,W_list = process_data.getWordsVect(W)</span><br><span class="line"></span><br><span class="line">  # use static train or not</span><br><span class="line">  static_falg = args.static_flag</span><br><span class="line">  # use shuffer the data or not</span><br><span class="line">  shuffer_falg = args.shuffer_flag</span><br><span class="line">  #交叉验证</span><br><span class="line">  results = []</span><br><span class="line">  for index in tqdm(range(10)):</span><br><span class="line">      #打调试断点</span><br><span class="line">      # pdb.set_trace()</span><br><span class="line">      # train_x, train_y, test_x, test_y = process_data.get_train_test_data1(W,revs,index,sentence_max_len,default_values=0.0,vec_size=300)</span><br><span class="line">      train_x, train_y, test_x, test_y = process_data.get_train_test_data2(word_ids,revs,index,sentence_max_len)</span><br><span class="line">      # 3 create TextCNN model</span><br><span class="line">      text_cnn = TextCNN(W_list,shuffer_falg,static_falg,filter_numbers,filter_sizes,sentence_max_len,embedding_size,args.learnrate,args.epochs,args.batch_size,args.dropout_pro)</span><br><span class="line">      # 4 start train</span><br><span class="line">      text_cnn.train(train_x,train_y)</span><br><span class="line">      # 5 validataion</span><br><span class="line">      accur,loss = text_cnn.validataion(test_x, test_y)</span><br><span class="line">      #</span><br><span class="line">      results.append(accur)</span><br><span class="line">      print(&apos;cv &#123;&#125; accur is :&#123;:.3f&#125; loss is &#123;:.3f&#125;&apos;.format(index+1,accur,loss))</span><br><span class="line">      text_cnn.close()</span><br><span class="line">  print(&apos;last accuracy is &#123;&#125;&apos;.format(np.mean(results)))</span><br></pre></td></tr></table></figure>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://www.zhihu.com/question/49376084" target="_blank" rel="noopener">如何理解卷积神经网络（CNN）中的卷积和池化？</a></li>
@@ -155,7 +208,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/24/task7/" data-id="cjw51f13h00077t1q3njlqea0" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/24/task7/" data-id="cjw72vli30007av1q6hgwyix0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li></ul>
@@ -204,7 +257,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjw51f13h00067t1q76fzyjyt" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjw72vli00005av1q7r5s0ah1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -257,7 +310,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjw51f13f00047t1qmhaukcpx" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjw72vlhy0004av1qqvvwpo4l" class="article-share-link">Share</a>
       
       
     </footer>
@@ -313,7 +366,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjw51f13c00027t1qfsldb84c" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjw72vlhw0003av1qqo69tdjl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -339,10 +392,10 @@
 <h2 id="tf-idf-方法1"><a href="#tf-idf-方法1" class="headerlink" title="tf-idf 方法1"></a>tf-idf 方法1</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.feature_extraction.text import TfidfTransformer  </span><br><span class="line">from sklearn.feature_extraction.text import CountVectorizer  </span><br><span class="line"></span><br><span class="line">corpus=[&quot;I come to China to travel&quot;, </span><br><span class="line">    &quot;This is a car polupar in China&quot;,          </span><br><span class="line">    &quot;I love tea and Apple &quot;,   </span><br><span class="line">    &quot;The work is to write some papers in science&quot;] </span><br><span class="line"></span><br><span class="line">vectorizer=CountVectorizer()</span><br><span class="line"></span><br><span class="line">transformer = TfidfTransformer()</span><br><span class="line">tfidf = transformer.fit_transform(vectorizer.fit_transform(corpus))  </span><br><span class="line">print(tfidf)</span><br></pre></td></tr></table></figure>
 <h2 id="tf-idf-方法2"><a href="#tf-idf-方法2" class="headerlink" title="tf-idf 方法2"></a>tf-idf 方法2</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.feature_extraction.text import TfidfVectorizer</span><br><span class="line">tfidf2 = TfidfVectorizer()</span><br><span class="line">re = tfidf2.fit_transform(corpus)</span><br><span class="line">print(re)</span><br></pre></td></tr></table></figure>
 <h2 id="tf-idf-方法3"><a href="#tf-idf-方法3" class="headerlink" title="tf-idf 方法3"></a>tf-idf 方法3</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">def tf(word, count):</span><br><span class="line">    return count[word] / sum(count.values())</span><br><span class="line">def n_containing(word, count_list):</span><br><span class="line">    return sum(1 for count in count_list if word in count)</span><br><span class="line">def idf(word, count_list):</span><br><span class="line">    return math.log(len(count_list)) / (1 + n_containing(word, count_list))</span><br><span class="line">def tfidf(word, count, count_list):</span><br><span class="line">    return tf(word, count) * idf(word, count_list)</span><br><span class="line"></span><br><span class="line">def get_tokens(text):</span><br><span class="line">    lower = text.lower()</span><br><span class="line">    remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)</span><br><span class="line">    no_punctuation = lower.translate(remove_punctuation_map)</span><br><span class="line">    tokens = nltk.word_tokenize(no_punctuation)</span><br><span class="line"></span><br><span class="line">    return tokens</span><br><span class="line"></span><br><span class="line">def count_term(text):</span><br><span class="line">    tokens = get_tokens(text)</span><br><span class="line">    filtered = [w for w in tokens if not w in stopwords.words(&apos;english&apos;)]</span><br><span class="line">    stemmer = PorterStemmer()</span><br><span class="line">    stemmed = stem_tokens(filtered, stemmer)</span><br><span class="line">    count = Counter(stemmed)</span><br><span class="line">    return count</span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    text1 = &quot;Natural language processing (NLP) is a field of computer science, artificial intelligence and computational linguistics concerned with the interactions between computers and human (natural) languages, and, in particular, concerned with programming computers to fruitfully process large natural language corpora. Challenges in natural language processing frequently involve natural language understanding, natural language generation (frequently from formal, machine-readable logical forms), connecting language and machine perception, managing human-computer dialog systems, or some combination thereof.&quot;</span><br><span class="line"></span><br><span class="line">    text2 = &quot;The Georgetown experiment in 1954 involved fully automatic translation of more than sixty Russian sentences into English. The authors claimed that within three or five years, machine translation would be a solved problem.[2] However, real progress was much slower, and after the ALPAC report in 1966, which found that ten-year-long research had failed to fulfill the expectations, funding for machine translation was dramatically reduced. Little further research in machine translation was conducted until the late 1980s, when the first statistical machine translation systems were developed.&quot;</span><br><span class="line"></span><br><span class="line">    text3 = &quot;During the 1970s, many programmers began to write conceptual ontologies, which structured real-world information into computer-understandable data. Examples are MARGIE (Schank, 1975), SAM (Cullingford, 1978), PAM (Wilensky, 1978), TaleSpin (Meehan, 1976), QUALM (Lehnert, 1977), Politics (Carbonell, 1979), and Plot Units (Lehnert 1981). During this time, many chatterbots were written including PARRY, Racter, and Jabberwacky。&quot;</span><br><span class="line"></span><br><span class="line">    texts = [text1, text2, text3]</span><br><span class="line">    countlist = []</span><br><span class="line">    for text in texts:</span><br><span class="line">        countlist.append(count_term(text))</span><br><span class="line">    for i, count in enumerate(countlist):</span><br><span class="line">        print(&quot;Top words in document &#123;&#125;&quot;.format(i + 1))</span><br><span class="line">        scores = &#123;word: tfidf(word, count, countlist) for word in count&#125;</span><br><span class="line">        sorted_words = sorted(scores.items(), key = lambda x: x[1], reverse=True)</span><br><span class="line">        for word, score in sorted_words[:5]:</span><br><span class="line">            print(&quot;\tWord: &#123;&#125;, TF-IDF: &#123;&#125;&quot;.format(word, round(score, 5)))</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
-<h2 id="点互信息和互信息"><a href="#点互信息和互信息" class="headerlink" title="点互信息和互信息"></a>点互信息和互信息</h2><p>  机器学习相关文献里面，经常会用到点互信息PMI(Pointwise Mutual Information)这个指标来衡量两个事物之间的相关性（比如两个词）。<br>  <img src="/2019/05/16/task3/pmi.png" alt="pmi"></p>
+<h2 id="点互信息和互信息"><a href="#点互信息和互信息" class="headerlink" title="点互信息和互信息"></a>点互信息和互信息</h2><p>  机器学习相关文献里面，经常会用到点互信息PMI(Pointwise Mutual Information)这个指标来衡量两个事物之间的相关性（比如两个词）。<br>  <img src="images/pmi.png" alt="pmi"></p>
 <p>  在概率论中，我们知道，如果x跟y不相关，则p(x,y)=p(x)p(y)。二者相关性越大，则p(x, y)就相比于p(x)p(y)越大。用后面的式子可能更好理解，在y出现的情况下x出现的条件概率p(x|y)除以x本身出现的概率p(x)，自然就表示x跟y的相关程度。</p>
 <p>  举个自然语言处理中的例子来说，我们想衡量like这个词的极性（正向情感还是负向情感）。我们可以预先挑选一些正向情感的词，比如good。然后我们算like跟good的PMI。</p>
-<p>  点互信息PMI其实就是从信息论里面的互信息这个概念里面衍生出来的。<br>  <img src="/2019/05/16/task3/mi.png" alt="mi"></p>
+<p>  点互信息PMI其实就是从信息论里面的互信息这个概念里面衍生出来的。<br>  <img src="images/mi.jpeg" alt="mi"></p>
 <p>  其衡量的是两个随机变量之间的相关性，即一个随机变量中包含的关于另一个随机变量的信息量。所谓的随机变量，即随机试验结果的量的表示，可以简单理解为按照一个概率分布进行取值的变量，比如随机抽查的一个人的身高就是一个随机变量。可以看出，互信息其实就是对X和Y的所有可能的取值情况的点互信息PMI的加权和。因此，点互信息这个名字还是很形象的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from sklearn import metrics as mr</span><br><span class="line">mr.mutual_info_score(label,x)</span><br></pre></td></tr></table></figure>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
@@ -352,7 +405,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjw51f13g00057t1qhlpd9boe" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjw72vli20006av1q4g6ovn83" class="article-share-link">Share</a>
       
       
     </footer>
@@ -379,7 +432,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjw51f13e00037t1qtzfgfdno" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjw72vlhu0002av1q6gl33phh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -461,7 +514,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjw51f13a00017t1qh3py8nwi" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjw72vlhr0001av1qorj9zavp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -530,52 +583,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjw51f13q000a7t1qg3uuau9i" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/baiju/2018/04/27/hello-world/" class="article-date">
-  <time datetime="2018-04-26T16:14:21.000Z" itemprop="datePublished">2018-04-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/baiju/2018/04/27/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/hello-world/" data-id="cjw51f13500007t1q0ksuq74e" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjw72vlie000bav1qjxqybksp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -586,6 +594,11 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/baiju/page/2/">2</a><a class="extend next" rel="next" href="/baiju/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -598,7 +611,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/Attention原理/">Attention原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/循环和递归神经网络/">循环和递归神经网络</a></li></ul>
     </div>
   </div>
 
@@ -608,7 +621,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/baiju/tags/卷积神经网络/" style="font-size: 10px;">卷积神经网络</a>
+      <a href="/baiju/tags/Attention原理/" style="font-size: 10px;">Attention原理</a> <a href="/baiju/tags/卷积神经网络/" style="font-size: 10px;">卷积神经网络</a> <a href="/baiju/tags/循环和递归神经网络/" style="font-size: 10px;">循环和递归神经网络</a>
     </div>
   </div>
 
@@ -630,6 +643,10 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       <ul>
         
           <li>
+            <a href="/baiju/2019/05/27/task9/">task9</a>
+          </li>
+        
+          <li>
             <a href="/baiju/2019/05/26/task8/">task8</a>
           </li>
         
@@ -643,10 +660,6 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
         
           <li>
             <a href="/baiju/2019/05/19/task5/">task5</a>
-          </li>
-        
-          <li>
-            <a href="/baiju/2019/05/16/task4/">task4</a>
           </li>
         
       </ul>

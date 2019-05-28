@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>task9 | 白驹</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Attention原理  在传统的 encoder-decoder 模型中，encoder 读取输入的句子将其转换为一个定长的向量，然后decoder 再将这个向量解码为对应的输出。然而，此时信息被压缩到一个定长的向量中，内容比较复杂，同时对于较长的输入句子，转换成定长向量可能带来一定的损失，因此随着输入序列长度的上升，这种结构的效果面临着挑战。   Attention 机制可以解决这种由长序列到">
+<meta name="keywords" content="Attention原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="task9">
+<meta property="og:url" content="https://day6.github.io/2019/05/27/task9/index.html">
+<meta property="og:site_name" content="白驹">
+<meta property="og:description" content="Attention原理  在传统的 encoder-decoder 模型中，encoder 读取输入的句子将其转换为一个定长的向量，然后decoder 再将这个向量解码为对应的输出。然而，此时信息被压缩到一个定长的向量中，内容比较复杂，同时对于较长的输入句子，转换成定长向量可能带来一定的损失，因此随着输入序列长度的上升，这种结构的效果面临着挑战。   Attention 机制可以解决这种由长序列到">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://day6.github.io/2019/05/27/task9/images/han.webp">
+<meta property="og:updated_time" content="2019-05-28T02:12:29.507Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="task9">
+<meta name="twitter:description" content="Attention原理  在传统的 encoder-decoder 模型中，encoder 读取输入的句子将其转换为一个定长的向量，然后decoder 再将这个向量解码为对应的输出。然而，此时信息被压缩到一个定长的向量中，内容比较复杂，同时对于较长的输入句子，转换成定长向量可能带来一定的损失，因此随着输入序列长度的上升，这种结构的效果面临着挑战。   Attention 机制可以解决这种由长序列到">
+<meta name="twitter:image" content="https://day6.github.io/2019/05/27/task9/images/han.webp">
+  
+    <link rel="alternate" href="/baiju/atom.xml" title="白驹" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/baiju/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/baiju/" id="logo">白驹</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/baiju/">Home</a>
+        
+          <a class="main-nav-link" href="/baiju/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/baiju/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://day6.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-task9" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/baiju/2019/05/27/task9/" class="article-date">
+  <time datetime="2019-05-27T15:48:19.000Z" itemprop="datePublished">2019-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      task9
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Attention原理"><a href="#Attention原理" class="headerlink" title="Attention原理"></a>Attention原理</h1><p>  在传统的 encoder-decoder 模型中，encoder 读取输入的句子将其转换为一个定长的向量，然后decoder 再将这个向量解码为对应的输出。然而，此时信息被压缩到一个定长的向量中，内容比较复杂，同时对于较长的输入句子，转换成定长向量可能带来一定的损失，因此随着输入序列长度的上升，这种结构的效果面临着挑战。</p>
+<p>  Attention 机制可以解决这种由长序列到定长向量转化而造成的信息损失问题。Attention 即注意力，它和人看文章或者图片时的思路类似，即将注意力集中到某几个区域上来帮助当前决策。</p>
+<h1 id="HAN的原理（Hierarchical-Attention-Networks）"><a href="#HAN的原理（Hierarchical-Attention-Networks）" class="headerlink" title="HAN的原理（Hierarchical Attention Networks）"></a>HAN的原理（Hierarchical Attention Networks）</h1><ul>
+<li>第一： 利用文档原有的层次结构特性（句子是由单词组成，文档是由句子组成），先使用单词的词向量表示句子，再此基础上以句子向量构建文档的信息表示。</li>
+<li>第二：在文档中，句子对文档的重要性贡献有差异，在句子中单词对句子的重要性贡献也有差异。而单词和句子的重要性依赖于上下文环境。相同的单词，在不同的上下文中所表现出的重要性是不一样的。为了描述这种情况，引入了Attention机制来描述这种重要性。<br>文章分别从句子级和文档级两个层次使用Attention机制。Attention机制可以带来两个优点：一个可以提升分类性能，第二个可以提升识别出在影响最终分类决策的单词或句子的重要性。<br><img src="images/han.webp" alt="HAN"></li>
+</ul>
+<h1 id="python"><a href="#python" class="headerlink" title="python"></a>python</h1><p>  AttLayer:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">class AttLayer(Layer):</span><br><span class="line">    def __init__(self, attention_dim):</span><br><span class="line">        self.init = initializers.get(&apos;normal&apos;)</span><br><span class="line">        self.supports_masking = True</span><br><span class="line">        self.attention_dim = attention_dim</span><br><span class="line">        super(AttLayer, self).__init__()</span><br><span class="line"></span><br><span class="line">    def build(self, input_shape):</span><br><span class="line">        assert len(input_shape) == 3</span><br><span class="line">        self.W = K.variable(self.init((input_shape[-1], self.attention_dim)))</span><br><span class="line">        self.b = K.variable(self.init((self.attention_dim, )))</span><br><span class="line">        self.u = K.variable(self.init((self.attention_dim, 1)))</span><br><span class="line">        self.trainable_weights = [self.W, self.b, self.u]</span><br><span class="line">        super(AttLayer, self).build(input_shape)</span><br><span class="line"></span><br><span class="line">    def compute_mask(self, inputs, mask=None):</span><br><span class="line">        return mask</span><br><span class="line"></span><br><span class="line">    def call(self, x, mask=None):</span><br><span class="line">        # size of x :[batch_size, sel_len, attention_dim]</span><br><span class="line">        # size of u :[batch_size, attention_dim]</span><br><span class="line">        # uit = tanh(xW+b)</span><br><span class="line">        uit = K.tanh(K.bias_add(K.dot(x, self.W), self.b))</span><br><span class="line">        ait = K.dot(uit, self.u)</span><br><span class="line">        ait = K.squeeze(ait, -1)</span><br><span class="line"></span><br><span class="line">        ait = K.exp(ait)</span><br><span class="line"></span><br><span class="line">        if mask is not None:</span><br><span class="line">            # Cast the mask to floatX to avoid float64 upcasting in theano</span><br><span class="line">            ait *= K.cast(mask, K.floatx())</span><br><span class="line">        ait /= K.cast(K.sum(ait, axis=1, keepdims=True) + K.epsilon(), K.floatx())</span><br><span class="line">        ait = K.expand_dims(ait)</span><br><span class="line">        weighted_input = x * ait</span><br><span class="line">        output = K.sum(weighted_input, axis=1)</span><br><span class="line"></span><br><span class="line">        return output</span><br><span class="line"></span><br><span class="line">    def compute_output_shape(self, input_shape):</span><br><span class="line">        return (input_shape[0], input_shape[-1])</span><br></pre></td></tr></table></figure></p>
+<p>  train:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">sentence_input = Input(shape=(MAX_SENT_LENGTH,), dtype=&apos;int32&apos;)</span><br><span class="line">embedded_sequences = embedding_layer(sentence_input)</span><br><span class="line">l_lstm = Bidirectional(GRU(100, return_sequences=True))(embedded_sequences)</span><br><span class="line">l_att = AttLayer(100)(l_lstm)</span><br><span class="line">sentEncoder = Model(sentence_input, l_att)</span><br><span class="line"></span><br><span class="line">review_input = Input(shape=(MAX_SENTS, MAX_SENT_LENGTH), dtype=&apos;int32&apos;)</span><br><span class="line">review_encoder = TimeDistributed(sentEncoder)(review_input)</span><br><span class="line">l_lstm_sent = Bidirectional(GRU(100, return_sequences=True))(review_encoder)</span><br><span class="line">l_att_sent = AttLayer(100)(l_lstm_sent)</span><br><span class="line">preds = Dense(2, activation=&apos;softmax&apos;)(l_att_sent)</span><br><span class="line">model = Model(review_input, preds)</span><br><span class="line"></span><br><span class="line">model.compile(loss=&apos;categorical_crossentropy&apos;,</span><br><span class="line">              optimizer=&apos;rmsprop&apos;,</span><br><span class="line">              metrics=[&apos;acc&apos;])</span><br><span class="line"></span><br><span class="line">print(&quot;model fitting - Hierachical attention network&quot;)</span><br><span class="line">model.fit(x_train, y_train, validation_data=(x_val, y_val),</span><br><span class="line">          nb_epoch=10, batch_size=50)</span><br></pre></td></tr></table></figure></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="http://pelhans.com/2019/04/26/deepdive_tensorflow-note10/" target="_blank" rel="noopener">深度学习笔记</a></li>
+<li><a href="https://blog.csdn.net/yyy430/article/details/88635646" target="_blank" rel="noopener">【NLP实践-Task9 Attention原理 】attention &amp; HAN &amp; 文本分类实战</a></li>
+<li><a href="https://github.com/richliao/textClassifier" target="_blank" rel="noopener">https://github.com/richliao/textClassifier</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/27/task9/" data-id="cjw72vlid000aav1qtr6dbibj" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/Attention原理/">Attention原理</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/baiju/2019/05/26/task8/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">task8</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/Attention原理/">Attention原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/循环和递归神经网络/">循环和递归神经网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/baiju/tags/Attention原理/" style="font-size: 10px;">Attention原理</a> <a href="/baiju/tags/卷积神经网络/" style="font-size: 10px;">卷积神经网络</a> <a href="/baiju/tags/循环和递归神经网络/" style="font-size: 10px;">循环和递归神经网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/baiju/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/baiju/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/baiju/2019/05/27/task9/">task9</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/26/task8/">task8</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/24/task7/">task7</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/22/task6/">task6</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/19/task5/">task5</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 baiju<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/baiju/" class="mobile-nav-link">Home</a>
+  
+    <a href="/baiju/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/baiju/fancybox/jquery.fancybox.css">
+  <script src="/baiju/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/baiju/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
