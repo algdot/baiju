@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>task10 | 白驹</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Transformer的原理  模型结构如下图：    和大多数seq2seq模型一样，transformer的结构也是由encoder和decoder组成。 BERT的原理  BERT的全称是Bidirectional Encoder Representation from Transformers，即双向Transformer的Encoder，因为decoder是不能获要预测的信息的。模型的主">
+<meta name="keywords" content="BERT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="task10">
+<meta property="og:url" content="https://day6.github.io/2019/05/29/task10/index.html">
+<meta property="og:site_name" content="白驹">
+<meta property="og:description" content="Transformer的原理  模型结构如下图：    和大多数seq2seq模型一样，transformer的结构也是由encoder和decoder组成。 BERT的原理  BERT的全称是Bidirectional Encoder Representation from Transformers，即双向Transformer的Encoder，因为decoder是不能获要预测的信息的。模型的主">
+<meta property="og:locale" content="zh">
+<meta property="og:image" content="https://day6.github.io/2019/05/29/task10/images/transformer.jpg">
+<meta property="og:image" content="https://day6.github.io/2019/05/29/task10/images/bert.jpeg">
+<meta property="og:updated_time" content="2019-05-29T16:30:33.198Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="task10">
+<meta name="twitter:description" content="Transformer的原理  模型结构如下图：    和大多数seq2seq模型一样，transformer的结构也是由encoder和decoder组成。 BERT的原理  BERT的全称是Bidirectional Encoder Representation from Transformers，即双向Transformer的Encoder，因为decoder是不能获要预测的信息的。模型的主">
+<meta name="twitter:image" content="https://day6.github.io/2019/05/29/task10/images/transformer.jpg">
+  
+    <link rel="alternate" href="/baiju/atom.xml" title="白驹" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/baiju/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/baiju/" id="logo">白驹</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/baiju/">Home</a>
+        
+          <a class="main-nav-link" href="/baiju/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/baiju/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://day6.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-task10" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/baiju/2019/05/29/task10/" class="article-date">
+  <time datetime="2019-05-29T14:38:39.000Z" itemprop="datePublished">2019-05-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      task10
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Transformer的原理"><a href="#Transformer的原理" class="headerlink" title="Transformer的原理"></a>Transformer的原理</h1><p>  模型结构如下图：<br>  <img src="images/transformer.jpg" alt="transformer"><br>  和大多数seq2seq模型一样，transformer的结构也是由encoder和decoder组成。</p>
+<h1 id="BERT的原理"><a href="#BERT的原理" class="headerlink" title="BERT的原理"></a>BERT的原理</h1><p>  BERT的全称是Bidirectional Encoder Representation from Transformers，即双向Transformer的Encoder，因为decoder是不能获要预测的信息的。模型的主要创新点都在pre-train方法上，即用了Masked LM和Next Sentence Prediction两种方法分别捕捉词语和句子级别的representation。<br>  <img src="images/bert.jpeg" alt="bert"></p>
+<h2 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h2><p>  BERT是一个语言表征模型（language representation model），通过超大数据、巨大模型、和极大的计算开销训练而成，在11个自然语言处理的任务中取得了最优（state-of-the-art, SOTA）结果。或许你已经猜到了此模型出自何方，没错，它产自谷歌。估计不少人会调侃这种规模的实验已经基本让一般的实验室和研究员望尘莫及了，但它确实给我们提供了很多宝贵的经验：</p>
+<p>  深度学习就是表征学习 （Deep learning is representation learning）：”We show that pre-trained representations eliminate the needs of many heavily engineered task-specific architectures”. 在11项BERT刷出新境界的任务中，大多只在预训练表征（pre-trained representation）微调（fine-tuning）的基础上加一个线性层作为输出（linear output layer）。在序列标注的任务里（e.g. NER），甚至连序列输出的依赖关系都先不管（i.e. non-autoregressive and no CRF），照样秒杀之前的SOTA，可见其表征学习能力之强大。<br>  规模很重要（Scale matters）：”One of our core claims is that the deep bidirectionality of BERT, which is enabled by masked LM pre-training, is the single most important improvement of BERT compared to previous work”. 这种遮挡（mask）在语言模型上的应用对很多人来说已经不新鲜了，但确是BERT的作者在如此超大规模的数据+模型+算力的基础上验证了其强大的表征学习能力。这样的模型，甚至可以延伸到很多其他的模型，可能之前都被不同的实验室提出和试验过，只是由于规模的局限没能充分挖掘这些模型的潜力，而遗憾地让它们被淹没在了滚滚的paper洪流之中。</p>
+<p>  预训练价值很大（Pre-training is important）：”We believe that this is the first work to demonstrate that scaling to extreme model sizes also leads to large improvements on very small-scale tasks, provided that the model has been sufficiently pre-trained”. 预训练已经被广泛应用在各个领域了（e.g. ImageNet for CV, Word2Vec in NLP），多是通过大模型大数据，这样的大模型给小规模任务能带来的提升有几何，作者也给出了自己的答案。BERT模型的预训练是用Transformer做的，但我想换做LSTM或者GRU的话应该不会有太大性能上的差别，当然训练计算时的并行能力就另当别论了。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://blog.csdn.net/qq_39521554/article/details/83062188" target="_blank" rel="noopener">谷歌BERT模型深度解析</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/29/task10/" data-id="cjw9g54nw0002yz1q994w8z1o" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/BERT/">BERT</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/baiju/2019/05/27/task9/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">task9</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/Attention原理/">Attention原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/BERT/">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/循环和递归神经网络/">循环和递归神经网络</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/baiju/tags/Attention原理/" style="font-size: 10px;">Attention原理</a> <a href="/baiju/tags/BERT/" style="font-size: 10px;">BERT</a> <a href="/baiju/tags/卷积神经网络/" style="font-size: 10px;">卷积神经网络</a> <a href="/baiju/tags/循环和递归神经网络/" style="font-size: 10px;">循环和递归神经网络</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/baiju/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/baiju/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/baiju/2019/05/29/task10/">task10</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/27/task9/">task9</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/26/task8/">task8</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/24/task7/">task7</a>
+          </li>
+        
+          <li>
+            <a href="/baiju/2019/05/22/task6/">task6</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 baiju<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/baiju/" class="mobile-nav-link">Home</a>
+  
+    <a href="/baiju/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/baiju/fancybox/jquery.fancybox.css">
+  <script src="/baiju/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/baiju/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -63,6 +63,52 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-task10" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/baiju/2019/05/29/task10/" class="article-date">
+  <time datetime="2019-05-29T14:38:39.000Z" itemprop="datePublished">2019-05-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/baiju/2019/05/29/task10/">task10</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Transformer的原理"><a href="#Transformer的原理" class="headerlink" title="Transformer的原理"></a>Transformer的原理</h1><p>  模型结构如下图：<br>  <img src="images/transformer.jpg" alt="transformer"><br>  和大多数seq2seq模型一样，transformer的结构也是由encoder和decoder组成。</p>
+<h1 id="BERT的原理"><a href="#BERT的原理" class="headerlink" title="BERT的原理"></a>BERT的原理</h1><p>  BERT的全称是Bidirectional Encoder Representation from Transformers，即双向Transformer的Encoder，因为decoder是不能获要预测的信息的。模型的主要创新点都在pre-train方法上，即用了Masked LM和Next Sentence Prediction两种方法分别捕捉词语和句子级别的representation。<br>  <img src="images/bert.jpeg" alt="bert"></p>
+<h2 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h2><p>  BERT是一个语言表征模型（language representation model），通过超大数据、巨大模型、和极大的计算开销训练而成，在11个自然语言处理的任务中取得了最优（state-of-the-art, SOTA）结果。或许你已经猜到了此模型出自何方，没错，它产自谷歌。估计不少人会调侃这种规模的实验已经基本让一般的实验室和研究员望尘莫及了，但它确实给我们提供了很多宝贵的经验：</p>
+<p>  深度学习就是表征学习 （Deep learning is representation learning）：”We show that pre-trained representations eliminate the needs of many heavily engineered task-specific architectures”. 在11项BERT刷出新境界的任务中，大多只在预训练表征（pre-trained representation）微调（fine-tuning）的基础上加一个线性层作为输出（linear output layer）。在序列标注的任务里（e.g. NER），甚至连序列输出的依赖关系都先不管（i.e. non-autoregressive and no CRF），照样秒杀之前的SOTA，可见其表征学习能力之强大。<br>  规模很重要（Scale matters）：”One of our core claims is that the deep bidirectionality of BERT, which is enabled by masked LM pre-training, is the single most important improvement of BERT compared to previous work”. 这种遮挡（mask）在语言模型上的应用对很多人来说已经不新鲜了，但确是BERT的作者在如此超大规模的数据+模型+算力的基础上验证了其强大的表征学习能力。这样的模型，甚至可以延伸到很多其他的模型，可能之前都被不同的实验室提出和试验过，只是由于规模的局限没能充分挖掘这些模型的潜力，而遗憾地让它们被淹没在了滚滚的paper洪流之中。</p>
+<p>  预训练价值很大（Pre-training is important）：”We believe that this is the first work to demonstrate that scaling to extreme model sizes also leads to large improvements on very small-scale tasks, provided that the model has been sufficiently pre-trained”. 预训练已经被广泛应用在各个领域了（e.g. ImageNet for CV, Word2Vec in NLP），多是通过大模型大数据，这样的大模型给小规模任务能带来的提升有几何，作者也给出了自己的答案。BERT模型的预训练是用Transformer做的，但我想换做LSTM或者GRU的话应该不会有太大性能上的差别，当然训练计算时的并行能力就另当别论了。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://blog.csdn.net/qq_39521554/article/details/83062188" target="_blank" rel="noopener">谷歌BERT模型深度解析</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://day6.github.io/2019/05/29/task10/" data-id="cjw9g54nw0002yz1q994w8z1o" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/BERT/">BERT</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-task9" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/baiju/2019/05/27/task9/" class="article-date">
@@ -102,7 +148,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/27/task9/" data-id="cjw72vlid000aav1qtr6dbibj" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/27/task9/" data-id="cjw9g54oh000dyz1qub1wyyi2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/Attention原理/">Attention原理</a></li></ul>
@@ -161,7 +207,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/26/task8/" data-id="cjw72vli50008av1qulh8e9o9" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/26/task8/" data-id="cjw9g54od000byz1q67pxtffr" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/循环和递归神经网络/">循环和递归神经网络</a></li></ul>
@@ -208,7 +254,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/24/task7/" data-id="cjw72vli30007av1q6hgwyix0" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/24/task7/" data-id="cjw9g54o9000ayz1qfd3lw3ll" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li></ul>
@@ -257,7 +303,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjw72vli00005av1q7r5s0ah1" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/22/task6/" data-id="cjw9g54o60009yz1qvylispdc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -310,7 +356,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjw72vlhy0004av1qqvvwpo4l" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/19/task5/" data-id="cjw9g54o40007yz1q09g77jrn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -366,7 +412,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjw72vlhw0003av1qqo69tdjl" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task4/" data-id="cjw9g54o30006yz1qfhrhtk9d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -405,7 +451,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjw72vli20006av1q4g6ovn83" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task3/" data-id="cjw9g54ny0003yz1q3p5vpdgx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -432,7 +478,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjw72vlhu0002av1q6gl33phh" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/16/task2/" data-id="cjw9g54o20005yz1qrqjtrmg3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -514,76 +560,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjw72vlhr0001av1qorj9zavp" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="i-u" class="article article-type-i" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/baiju/2018/04/27/u/" class="article-date">
-  <time datetime="2018-04-26T16:31:38.000Z" itemprop="datePublished">2018-04-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/baiju/2018/04/27/u/">消息队列</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h1><p>  Producer把消息按照顺序放入队列中，由Consumer异步消费, 从而达到事务的一致性</p>
-<ul>
-<li>组成部分<ul>
-<li>Producer</li>
-<li>Consumer</li>
-<li>Queue</li>
-</ul>
-</li>
-<li>特性<ul>
-<li>路由</li>
-<li>订阅模式</li>
-<li>消息轨迹</li>
-<li>消费回放</li>
-</ul>
-</li>
-</ul>
-<h2 id="RocketMq"><a href="#RocketMq" class="headerlink" title="RocketMq"></a>RocketMq</h2><h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>  组成部分</p>
-<ul>
-<li>NameService</li>
-<li>Broker</li>
-<li>Producer</li>
-<li>Consumer<br>架构图</li>
-</ul>
-<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><ul>
-<li>定时消息</li>
-</ul>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><h2 id="RabbitMq"><a href="#RabbitMq" class="headerlink" title="RabbitMq"></a>RabbitMq</h2><h3 id="架构-1"><a href="#架构-1" class="headerlink" title="架构"></a>架构</h3><ul>
-<li></li>
-</ul>
-<h2 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h2><ul>
-<li>优先队列（priority)</li>
-</ul>
-<h2 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h2><p>auto/configure –sbin-path=/export/nginx-dev/nginx –conf-path=/export/nginx-dev/nginx.conf –pid-path=/export/nginx-dev/nginx.pid –with-http_ssl_module –with-debug –with-openssl=/usr/local/Cellar/openssl/1.0.2o_1</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://day6.github.io/2018/04/27/u/" data-id="cjw72vlie000bav1qjxqybksp" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/12/task1/" data-id="cjw9g54nu0001yz1qjdlndd97" class="article-share-link">Share</a>
       
       
     </footer>
@@ -611,7 +588,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/Attention原理/">Attention原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/循环和递归神经网络/">循环和递归神经网络</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/Attention原理/">Attention原理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/BERT/">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/卷积神经网络/">卷积神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/baiju/tags/循环和递归神经网络/">循环和递归神经网络</a></li></ul>
     </div>
   </div>
 
@@ -621,7 +598,7 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/baiju/tags/Attention原理/" style="font-size: 10px;">Attention原理</a> <a href="/baiju/tags/卷积神经网络/" style="font-size: 10px;">卷积神经网络</a> <a href="/baiju/tags/循环和递归神经网络/" style="font-size: 10px;">循环和递归神经网络</a>
+      <a href="/baiju/tags/Attention原理/" style="font-size: 10px;">Attention原理</a> <a href="/baiju/tags/BERT/" style="font-size: 10px;">BERT</a> <a href="/baiju/tags/卷积神经网络/" style="font-size: 10px;">卷积神经网络</a> <a href="/baiju/tags/循环和递归神经网络/" style="font-size: 10px;">循环和递归神经网络</a>
     </div>
   </div>
 
@@ -643,6 +620,10 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
       <ul>
         
           <li>
+            <a href="/baiju/2019/05/29/task10/">task10</a>
+          </li>
+        
+          <li>
             <a href="/baiju/2019/05/27/task9/">task9</a>
           </li>
         
@@ -656,10 +637,6 @@ FN（False Negative）：在判定为negative的样本中，判断错误的数�
         
           <li>
             <a href="/baiju/2019/05/22/task6/">task6</a>
-          </li>
-        
-          <li>
-            <a href="/baiju/2019/05/19/task5/">task5</a>
           </li>
         
       </ul>
