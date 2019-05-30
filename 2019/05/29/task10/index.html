@@ -17,7 +17,7 @@
 <meta property="og:locale" content="zh">
 <meta property="og:image" content="https://day6.github.io/2019/05/29/task10/images/transformer.jpg">
 <meta property="og:image" content="https://day6.github.io/2019/05/29/task10/images/bert.jpeg">
-<meta property="og:updated_time" content="2019-05-29T16:30:33.198Z">
+<meta property="og:updated_time" content="2019-05-30T12:41:31.073Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="task10">
 <meta name="twitter:description" content="Transformer的原理  模型结构如下图：    和大多数seq2seq模型一样，transformer的结构也是由encoder和decoder组成。 BERT的原理  BERT的全称是Bidirectional Encoder Representation from Transformers，即双向Transformer的Encoder，因为decoder是不能获要预测的信息的。模型的主">
@@ -97,12 +97,13 @@
 <p>  预训练价值很大（Pre-training is important）：”We believe that this is the first work to demonstrate that scaling to extreme model sizes also leads to large improvements on very small-scale tasks, provided that the model has been sufficiently pre-trained”. 预训练已经被广泛应用在各个领域了（e.g. ImageNet for CV, Word2Vec in NLP），多是通过大模型大数据，这样的大模型给小规模任务能带来的提升有几何，作者也给出了自己的答案。BERT模型的预训练是用Transformer做的，但我想换做LSTM或者GRU的话应该不会有太大性能上的差别，当然训练计算时的并行能力就另当别论了。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://blog.csdn.net/qq_39521554/article/details/83062188" target="_blank" rel="noopener">谷歌BERT模型深度解析</a></li>
+<li><a href="https://github.com/google-research/bert" target="_blank" rel="noopener">Bert</a></li>
 </ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://day6.github.io/2019/05/29/task10/" data-id="cjw9g54nw0002yz1q994w8z1o" class="article-share-link">Share</a>
+      <a data-url="https://day6.github.io/2019/05/29/task10/" data-id="cjwane5o00003tktvuv2dy2pz" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/baiju/tags/BERT/">BERT</a></li></ul>
